@@ -37,22 +37,18 @@ class Article extends React.Component{
 
         console.dir(this.state.count);
 
-        let {articleData: article} = this.props;
-
-        let articleStyles = {
-            color: 'blue',
-            border: '1px black solid',
-            margin: '5px'
-        } 
+        let {articleData: article} = this.props;       
 
         return (
-            <article style={articleStyles}>
-                <h1>{article.title}</h1>
-                <p>{this.state.isOpen ? article.text : article.text.substr(0, 15) + '...'}</p> 
-                <button onClick={this.buttonClickHandler} style={this.state.buttonColor}>
-                    {this.state.isOpen ? 'Close' : 'Open'}
-                </button>        
-            </article>
+            <div className="card">
+                <article className="card-body">
+                    <h1 className="card-title">{article.title}</h1>
+                    <p className="card-text">{this.state.isOpen ? article.text : article.text.substr(0, 15) + '...'}</p> 
+                    <button onClick={this.buttonClickHandler} className="btn btn-primary">
+                        {this.state.isOpen ? 'Close' : 'Open'}
+                    </button>        
+                </article>
+            </div>
         )
     }
 }
