@@ -1,5 +1,5 @@
 import React from 'react'
-import Article from './Article'
+import ArticleItem from './ArticleItem'
 
 function ArticleList (props){
 
@@ -8,7 +8,7 @@ function ArticleList (props){
 
     if(data.length){
         articleComponents = data.map((item)=>{
-            return <Article key={item.id} articleData={item}/>
+            return <ArticleItem key={item.id} articleData={item}/>
         });
     }
     else{

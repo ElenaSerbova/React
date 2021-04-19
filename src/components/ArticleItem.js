@@ -1,9 +1,10 @@
 import React from 'react'
+import {Link} from 'react-router-dom'
 
 //function Article(props){}
 //const Article = (props) => {}
 
-class Article extends React.Component{
+class ArticleItem extends React.Component{
 
     constructor(props){
         super(props);
@@ -42,7 +43,7 @@ class Article extends React.Component{
         return (
             <div className="card">
                 <article className="card-body">
-                    <h1 className="card-title">{article.title}</h1>
+                    <h1 className="card-title"><Link to={`/Article/${article.id}`}>{article.title}</Link></h1>
                     <p className="card-text">{this.state.isOpen ? article.text : article.text.substr(0, 15) + '...'}</p> 
                     <button onClick={this.buttonClickHandler} className="btn btn-primary">
                         {this.state.isOpen ? 'Close' : 'Open'}
@@ -56,5 +57,5 @@ class Article extends React.Component{
 
 
 
-export default Article
+export default ArticleItem
 
