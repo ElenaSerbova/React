@@ -24,7 +24,7 @@ function App(){
             
                 <header>
                     <div className="p-5 text-center bg-light">
-                        <h1>Header</h1>
+                        <h1>Blog</h1>
                     </div>     
                     <Nav/>           
                 </header>
