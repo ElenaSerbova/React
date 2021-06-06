@@ -57,5 +57,27 @@ namespace BlogWebApiNew.Controllers
         {  
             return await _context.Articles.ToListAsync();
         }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Article>> GetArticle(int id)
+        {
+            var article = await _context.Articles.FindAsync(id);
+
+            if (article == null)
+            {
+                return NotFound();
+            }
+
+            return article;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Article>> PostArticle(Article article)
+        {
+            _context.Articles.Add(article);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetArticle", new { id = article.Id }, article);
+        }
     }
 }
