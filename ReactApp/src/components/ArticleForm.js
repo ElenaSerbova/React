@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import {Redirect} from 'react-router-dom'
 
 class ArticleForm extends Component{
 
@@ -11,7 +12,8 @@ class ArticleForm extends Component{
             isValid: true,
             isAgree: false,
             isValidTitle: true,
-            isValidText: true
+            isValidText: true,
+            isCreated: false
         }
 
         this.submitHandler = this.submitHandler.bind(this);
@@ -25,7 +27,9 @@ class ArticleForm extends Component{
         console.log(event);
         event.preventDefault();
 
-        if(this.state.isValidTitle){
+        let {isValidText, isValidTitle, isAgree} = this.state;
+
+        if(isValidTitle && isValidText && isAgree){
 
             const baseUrl = "https://localhost:44342/api/article";
 
@@ -44,13 +48,11 @@ class ArticleForm extends Component{
     
             fetch(baseUrl, options)
                 .then((response) => {
-                    if(!response.ok)
-                        throw Error(response.statusText);
-    
-                    return response;
-                })
-                .then((response) =>  console.log())
-                .catch(()=>console.log("error"));
+                    if(response.ok)
+                    {
+                       this.setState({isCreated: true});
+                    }
+                });
         
         }
         else{
@@ -83,45 +85,53 @@ class ArticleForm extends Component{
     }
 
     render(){
-        return (    
-            <div className="container">     
-                <form onSubmit={this.submitHandler}>
-                    <div className="form-group">
-                        <label htmlFor="title" className="form-label">Title</label>
+
+        if(this.state.isCreated)
+        {
+            return (<Redirect to="/Article/List" />);
+        }
+        else
+        {
+            return (    
+                <div className="container">     
+                    <form onSubmit={this.submitHandler}>
+                        <div className="form-group">
+                            <label htmlFor="title" className="form-label">Title</label>
+                            <input 
+                                value={this.state.title} 
+                                onChange={this.titleChangeHandler}                           
+                                type="text" 
+                                name="title" 
+                                id="title" 
+                                className="form-control"/>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="text" className="form-label">Text</label>
+                            <textarea 
+                                value={this.state.text} 
+                                onChange={this.textChangeHandler}                            
+                                name="text" 
+                                id="text" 
+                                className="form-control"></textarea>
+                        </div>   
+                        <div className="form-group">
+                            <label htmlFor="agree" className="form-label">Are you agree?</label>
+                            <input 
+                                onChange={this.agreeChangeHandler}                            
+                                type="checkbox" 
+                                name="isAgree" 
+                                id="agree" 
+                            />
+                        </div>                 
                         <input 
-                            value={this.state.title} 
-                            onChange={this.titleChangeHandler}                           
-                            type="text" 
-                            name="title" 
-                            id="title" 
-                            className="form-control"/>
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="text" className="form-label">Text</label>
-                        <textarea 
-                            value={this.state.text} 
-                            onChange={this.textChangeHandler}                            
-                            name="text" 
-                            id="text" 
-                            className="form-control"></textarea>
-                    </div>   
-                    <div className="form-group">
-                        <label htmlFor="agree" className="form-label">Are you agree?</label>
-                        <input 
-                            onChange={this.agreeChangeHandler}                            
-                            type="checkbox" 
-                            name="isAgree" 
-                            id="agree" 
-                        />
-                    </div>                 
-                    <input 
-                        disabled={!this.state.isValidTitle || !this.state.isValidText || !this.state.isAgree}
-                        type="submit"
-                        className="btn btn-primary" 
-                        value="Create"/>
-                </form>   
-            </div>            
-        );
+                            disabled={!this.state.isValidTitle || !this.state.isValidText || !this.state.isAgree}
+                            type="submit"
+                            className="btn btn-primary" 
+                            value="Create"/>
+                    </form>   
+                </div>            
+            );
+        }
     }
 }
 
