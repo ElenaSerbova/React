@@ -25,7 +25,15 @@ namespace BlogWebApiNew.Controllers
 
 			if(_context.Users.Count() == 0)
             {
-				_context.Users.Add(new Model.User { Login = "qqq", Password = "qqq", Role = "admin" });
+
+				var sha256 = new SHA256Managed();
+				var passwordHash = Convert.ToBase64String(sha256.ComputeHash(Encoding.UTF8.GetBytes("qqq")));
+
+				_context.Users.Add(new Model.User { 
+					Login = "qqq", 
+					Password = passwordHash, 
+					Role = "admin" 
+				});
 				_context.SaveChanges();
             }
 
@@ -36,8 +44,8 @@ namespace BlogWebApiNew.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Token([FromBody] User user)
 		{
-			var identity = await GetIdentity(user.Login, user.Password);
-			if (identity == null)
+			var claims = await GetIdentity(user.Login, user.Password);
+			if (claims == null)
 			{
 				return Unauthorized();
 			}
@@ -47,9 +55,10 @@ namespace BlogWebApiNew.Controllers
 					issuer: AuthOptions.ISSUER,
 					audience: AuthOptions.AUDIENCE,
 					notBefore: now,
-					claims: identity,
+					claims: claims,
 					expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
 					signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+			
 			var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 
 			return Json(encodedJwt);
@@ -65,14 +74,17 @@ namespace BlogWebApiNew.Controllers
 			{
 				var sha256 = new SHA256Managed();
 				var passwordHash = Convert.ToBase64String(sha256.ComputeHash(Encoding.UTF8.GetBytes(password)));
-				if (user.Password == user.Password)
+				
+				if (passwordHash == user.Password)
 				{
 					claims = new List<Claim>
 					{
 						new Claim(ClaimsIdentity.DefaultNameClaimType, user.Login),
+						new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role)
 					};
 				}
 			}
+			
 			return claims;
 		}
 	}

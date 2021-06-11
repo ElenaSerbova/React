@@ -5,7 +5,7 @@ import { Route, Switch, Redirect } from 'react-router-dom';
 
 import ArticleList from '../containers/articles/articleList.js'
 import ArticleForm from '../components/ArticleForm'
-import ArticleDetails from '../components/articleDetails'
+import ArticleDetails from '../components/ArticleDetails.js'
 import ChildRoutes from '../components/ChildRoutes'
 import Search from '../components/Search'
 import NotFound from '../components/NotFound'

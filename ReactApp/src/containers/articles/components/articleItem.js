@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { Link } from 'react-router-dom';
 
 export default class ArticleItem extends React.Component {
@@ -11,7 +10,7 @@ export default class ArticleItem extends React.Component {
         let deleteBlock;
         if (this.props.isLogged) {
             deleteBlock =
-                <a className="link">Удалить запись</a>;
+                <a className="link" href="#">Удалить запись</a>;
         }
 
         return (

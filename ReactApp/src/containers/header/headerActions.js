@@ -33,27 +33,30 @@ export function logout() {
 export function login(userName, password) {
     return (dispatch) => {
         if (userName && password) {
-            var data = {
+            
+
+            let user = {
                 login: userName,
                 password: password
-            };
+            };            
 
             fetch('https://localhost:44342/token', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json; charset=utf-8'
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify(user)
             }).then((response) => {
-                if (response.ok) {
+                if (response.ok) {                                      
                     return response.json();
                 } else {
                     dispatch({ type: LOGIN_ERROR, payload: 'Ошибка авторизации' });
                     throw 'Ошибка авторизации';
                 }
-            }).then((data) => {
-                AuthHelper.saveAuth(data.username, data.access_token);
-                dispatch({ type: LOGIN_SUCCESS, payload: data.username });
+            }).then((data) => {    
+                console.log(data);            
+                AuthHelper.saveAuth(user.login, data.access_token);
+                dispatch({ type: LOGIN_SUCCESS, payload: user.login });
             }).catch((ex) => {
                 alert(ex);
                 dispatch({ type: LOGIN_ERROR, payload: ex });
